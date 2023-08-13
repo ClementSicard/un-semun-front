@@ -81,7 +81,14 @@ export const Nav: React.FC<NavProps> = ({ children }) => {
             <ModalCloseButton />
             <ModalBody>
               <Text>
-                This project was made as part of a collaboration between{' '}
+                This user interface is part of the project{' '}
+                <i>
+                  SemUN: A Semantics-Powered Search Platform for the United
+                  Nations’ Digital Library
+                </i>{' '}
+                <br />
+                <br />
+                It was completed in the frame of a collaboration between{' '}
                 <Link isExternal color='teal.500' href={'https://ethz.ch/'}>
                   ETH Zurich
                   <ExternalLinkIcon mx='2px' />

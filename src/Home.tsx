@@ -4,7 +4,10 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  Box,
+  Code,
   Divider,
+  Flex,
   SlideFade,
   Stack,
   Text,
@@ -50,20 +53,18 @@ export const Home: React.FC = () => {
       </Nav>
       {displayError && (
         <div>
-          <SlideFade in={displayError} offsetY='20px'>
-            <VStack spacing={4} m='1rem'>
-              <Alert status='error' variant='left-accent'>
-                <AlertIcon />
-                <AlertTitle>Oops... </AlertTitle>
-                <AlertDescription>
-                  <Text>
-                    There was an error fetching the API: {error.message}
-                  </Text>
-                </AlertDescription>
-              </Alert>
-              <Text align='start' w='100'></Text>
-            </VStack>
-          </SlideFade>
+          <VStack spacing={4} m='1rem'>
+            <Alert status='error' variant='left-accent'>
+              <AlertIcon />
+              <AlertTitle>Oops... </AlertTitle>
+              <AlertDescription>
+                <Text>
+                  There was an error fetching the API: {error.message}
+                </Text>
+              </AlertDescription>
+            </Alert>
+            <Text align='start' w='100'></Text>
+          </VStack>
         </div>
       )}
       {displaySuccess && (
@@ -85,6 +86,16 @@ export const Home: React.FC = () => {
           </VStack>
         </div>
       )}
+      <Flex width='100%' height='100vh'>
+        <Box flex='1' bg='tomato' p={4}>
+          Ici, les résultats de la recherche
+        </Box>
+        <Box flex='2' bg='cyan' p={4}>
+          <Text>
+            Ici c'est le graph avec <Code>Sigma.js</Code>
+          </Text>
+        </Box>
+      </Flex>
     </>
   )
 }

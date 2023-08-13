@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { ApiRecord } from '../types/ApiResponse'
 import {
   Card,
@@ -9,7 +9,6 @@ import {
   Button,
   Heading,
   Link,
-  Icon,
   CardHeader
 } from '@chakra-ui/react'
 
