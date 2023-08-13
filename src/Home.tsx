@@ -4,20 +4,24 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  Divider,
   SlideFade,
   Stack,
   Text,
   VStack
 } from '@chakra-ui/react'
 import { SearchBar } from './components/SearchBar'
-import ApiResponse from './types/ApiResponse'
-import queryApi from './lib/api'
+import { ApiResponse } from './types/ApiResponse'
+import { queryApi, getCardsFromApiResponse } from './lib/api'
+import { Nav } from './components/Nav'
 
 export const Home: React.FC = () => {
   const [data, setData] = useState<ApiResponse | null>(null)
   const [isSearching, setIsSearching] = useState(false)
   const [isError, setIsError] = useState(false)
   const [error, setError] = useState<any>(null)
+
+  const pageSize = 100
 
   const handleSearch = async (query: string): Promise<void> => {
     console.log('Search query:', query)
@@ -37,12 +41,13 @@ export const Home: React.FC = () => {
 
   const displaySuccess = data && !isError && !isSearching
   const displayError = isError && !isSearching
+  const nbOfPages = data ? Math.ceil(data.total / pageSize) : 0
 
   return (
     <>
-      <Stack spacing={2} direction='column' align='center' m='1rem'>
+      <Nav>
         <SearchBar onSearch={handleSearch} isSearching={isSearching} />
-      </Stack>
+      </Nav>
       {displayError && (
         <div>
           <SlideFade in={displayError} offsetY='20px'>
@@ -70,12 +75,13 @@ export const Home: React.FC = () => {
               variant='left-accent'
             >
               <AlertIcon />
-              <Text>
+              <Text w='sm'>
                 Search returned <b> {data.total.toLocaleString(undefined)} </b>{' '}
                 results.
               </Text>
             </Alert>
-            <Text align='start' w='100'></Text>
+            <Divider />
+            {getCardsFromApiResponse(data)}
           </VStack>
         </div>
       )}

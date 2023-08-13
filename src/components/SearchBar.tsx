@@ -8,14 +8,18 @@ import {
 } from '@chakra-ui/react'
 import { Search2Icon } from '@chakra-ui/icons'
 
+const borderRadius = '20'
+
 interface SearchBarProps {
   onSearch: (query: string) => void
   isSearching?: boolean
+  size?: string
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
-  isSearching
+  isSearching = false,
+  size = 'md'
 }) => {
   const [query, setQuery] = useState('')
 
@@ -31,39 +35,38 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <>
-      <InputGroup borderRadius={5} size='sm'>
-        <InputLeftElement
-          pointerEvents='none'
-          children={<Search2Icon color='gray.600' />}
-        />
+      <InputGroup size={size} borderRadius={borderRadius} maxW='80%'>
+        <InputLeftElement children={<Search2Icon color='gray.600' />} />
         <Input
           type='text'
           placeholder='Search...'
           border='1px solid #949494'
           value={query}
+          size={size}
           onChange={e => setQuery(e.target.value)}
           onKeyPress={handleKeyPress}
+          borderRadius={borderRadius} // Top left and bottom left rounded
         />
         <InputRightAddon p={0} border='none'>
           {isSearching ? (
             <Button
               isLoading
               loadingText='Searching'
-              size='sm'
+              size={size}
               colorScheme='blue'
-              variant='fill'
+              variant='outline'
               borderLeftRadius={0}
-              borderRightRadius={3.3}
+              borderRightRadius={borderRadius} // Top right and bottom right rounded
               border='1px solid #949494'
               onClick={handleSearchClick}
             />
           ) : (
             <Button
-              size='sm'
+              size={size}
               colorScheme='blue'
               variant='outline'
               borderLeftRadius={0}
-              borderRightRadius={3.3}
+              borderRightRadius={borderRadius} // Top right and bottom right rounded
               border='1px solid #949494'
               onClick={handleSearchClick}
             >
@@ -75,3 +78,5 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     </>
   )
 }
+
+export default SearchBar

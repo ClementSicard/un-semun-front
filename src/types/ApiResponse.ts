@@ -38,4 +38,4 @@ interface ApiResponse {
     records: ApiRecord[];
 }
 
-export default ApiResponse;
+export type { ApiResponse, ApiRecord };
