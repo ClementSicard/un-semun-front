@@ -48,9 +48,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           {isSearching ? (
             <Button
               isLoading
+              loadingText='Searching'
               size='sm'
               colorScheme='blue'
-              variant='outline'
+              variant='fill'
               borderLeftRadius={0}
               borderRightRadius={3.3}
               border='1px solid #949494'
