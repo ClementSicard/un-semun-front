@@ -7,6 +7,7 @@ import {
   InputRightAddon
 } from '@chakra-ui/react'
 import { Search2Icon } from '@chakra-ui/icons'
+import { BeatLoader } from 'react-spinners'
 
 const borderRadius = '20'
 
@@ -51,10 +52,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           {isSearching ? (
             <Button
               isLoading
-              loadingText='Searching'
               size={size}
+              spinner={<BeatLoader size={8} color='blue' />}
               colorScheme='blue'
-              variant='outline'
               borderLeftRadius={0}
               borderRightRadius={borderRadius} // Top right and bottom right rounded
               border='1px solid #949494'

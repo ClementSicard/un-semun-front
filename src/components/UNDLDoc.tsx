@@ -1,15 +1,17 @@
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
 import { ApiRecord } from '../types/ApiResponse'
 import {
   Card,
-  Text,
   CardBody,
-  CardFooter,
+  Text,
   Stack,
   Button,
   Heading,
   Link,
-  CardHeader
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  Spacer
 } from '@chakra-ui/react'
 
 interface ResultCardProps {
@@ -21,46 +23,44 @@ export const UNDLDoc: React.FC<ResultCardProps> = ({ record }) => {
     <>
       <Card
         direction={{ base: 'column', sm: 'row' }}
-        overflow='hidden'
+        overflow='ellipsis'
         variant='filled'
         align='center'
         border={1}
         borderRadius={20}
         colorScheme='gray'
-        w='xl'
+        // w='l'
+        w='100%'
       >
-        <Stack>
-          <CardHeader>
-            <Heading size='md'>
+        <Stack maxH='150'>
+          <CardBody>
+            <Tag size={'sm'} key={'sm'} colorScheme='teal' variant='subtle'>
+              <TagLeftIcon boxSize='12px' as={LinkIcon} />
+              <TagLabel>{record.symbol}</TagLabel>
+            </Tag>
+            <Heading size='xs'>
               <Link
                 isExternal
                 variant='solid'
                 colorScheme='blue'
                 onClick={openDocLink}
               >
-                {record.title}
+                <Text noOfLines={[1, 2]}>{record.title}</Text>
               </Link>
             </Heading>
-          </CardHeader>
-          <CardBody>
-            <Text py='2'>
-              Caffè latte is a coffee beverage of Italian origin made with
-              espresso and steamed milk.
-            </Text>
-          </CardBody>
-
-          <CardFooter>
-            <Button>
+            <Spacer h='15' />
+            <Button variant='outline'>
               <Link
                 isExternal
-                variant='solid'
+                variant='outline'
                 colorScheme='blue'
+                fontSize={'sm'}
                 onClick={openDocLink}
               >
                 View document <ExternalLinkIcon mx='2px' />
               </Link>
             </Button>
-          </CardFooter>
+          </CardBody>
         </Stack>
       </Card>
     </>

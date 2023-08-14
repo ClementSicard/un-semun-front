@@ -25,4 +25,8 @@ function getApiUrl (): string {
   return url
 }
 
-export { queryApi, getCardsFromApiResponse }
+function getGraphFromQuery (query: string): string {
+  return ''
+}
+
+export { queryApi, getCardsFromApiResponse, getGraphFromQuery }

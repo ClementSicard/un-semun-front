@@ -1,14 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Alert,
   AlertDescription,
   AlertIcon,
   AlertTitle,
   Box,
-  Code,
-  Divider,
+  Center,
   Flex,
-  SlideFade,
   Text,
   VStack
 } from '@chakra-ui/react'
@@ -16,12 +14,16 @@ import { SearchBar } from './components/SearchBar'
 import { ApiResponse } from './types/ApiResponse'
 import { queryApi, getCardsFromApiResponse } from './lib/api'
 import { Nav } from './components/Nav'
+import { useLoadGraph, SigmaContainer } from '@react-sigma/core'
+import '@react-sigma/core/lib/react-sigma.min.css'
+import Graph from 'graphology'
 
 export const Home: React.FC = () => {
   const [data, setData] = useState<ApiResponse | null>(null)
   const [isSearching, setIsSearching] = useState(false)
   const [isError, setIsError] = useState(false)
   const [error, setError] = useState<any>(null)
+  const [graphData, setGraphData] = useState<any>(null)
 
   const pageSize = 100
 
@@ -49,54 +51,115 @@ export const Home: React.FC = () => {
 
   return (
     <>
-      <Nav>
-        <SearchBar onSearch={handleSearch} isSearching={isSearching} />
-      </Nav>
-      {displayError && (
-        <div>
-          <VStack spacing={4} m='1rem'>
-            <Alert status='error' variant='left-accent'>
-              <AlertIcon />
-              <AlertTitle>Oops... </AlertTitle>
-              <AlertDescription>
-                <Text>
-                  There was an error fetching the API: {error.message}
-                </Text>
-              </AlertDescription>
-            </Alert>
-            <Text align='start' w='100'></Text>
-          </VStack>
-        </div>
-      )}
-      {displaySuccess && (
-        <div>
-          <SlideFade in={displaySuccess} offsetY='20px'></SlideFade>
-          <VStack spacing={4} m='1rem'>
+      <Box maxH='100vh'>
+        <Nav>
+          <SearchBar onSearch={handleSearch} isSearching={isSearching} />
+        </Nav>
+
+        {displayAPIError()}
+        {displayAPISuccess()}
+
+        <Flex width='100%' height='100vh'>
+          <Box flex='1' bg='white' p={4} overflowY='auto'>
+            {resultsPane()}
+          </Box>
+          <Box flex='2' bg='cyan' p={4}>
+            {graphPane()}
+          </Box>
+        </Flex>
+      </Box>
+    </>
+  )
+
+  function resultsPane () {
+    return (
+      <>
+        <VStack spacing={4}>{data && getCardsFromApiResponse(data)}</VStack>
+        {!data && (
+          <Center>
+            <Text>Make a query to see the results</Text>
+          </Center>
+        )}
+      </>
+    )
+  }
+
+  function graphPane () {
+    return (
+      <>
+        <DisplayGraph />
+      </>
+    )
+  }
+
+  function displayAPIError () {
+    return (
+      <>
+        {displayError && (
+          <div>
+            <VStack spacing={4} m='1rem'>
+              <Alert status='error' variant='left-accent'>
+                <AlertIcon />
+                <AlertTitle>Oops... </AlertTitle>
+                <AlertDescription>
+                  <Text>
+                    There was an error fetching the API: {error.message}
+                  </Text>
+                </AlertDescription>
+              </Alert>
+              <Text align='start' w='100'></Text>
+            </VStack>
+          </div>
+        )}
+      </>
+    )
+  }
+
+  function displayAPISuccess () {
+    return (
+      <>
+        {displaySuccess && (
+          <div>
             <Alert
               status={data.total > 0 ? 'success' : 'warning'}
-              variant='left-accent'
+              variant='top-accent'
+              maxH={'40'}
             >
               <AlertIcon />
-              <Text w='sm'>
+              <Text fontSize={'sm'} size={'sm'}>
                 Search returned <b> {data.total.toLocaleString(undefined)} </b>{' '}
                 results.
               </Text>
             </Alert>
-            <Divider />
-            {getCardsFromApiResponse(data)}
-          </VStack>
-        </div>
-      )}
-      <Flex width='100%' height='100vh'>
-        <Box flex='1' bg='tomato' p={4}>
-          Ici, les résultats de la recherche
-        </Box>
-        <Box flex='2' bg='cyan' p={4}>
-          <Text>
-            Ici c'est le graph avec <Code>Sigma.js</Code>
-          </Text>
-        </Box>
-      </Flex>
-    </>
+          </div>
+        )}
+      </>
+    )
+  }
+}
+
+export const LoadGraph = () => {
+  const loadGraph = useLoadGraph()
+
+  useEffect(() => {
+    const graph = new Graph()
+    graph.addNode('first', {
+      x: 0,
+      y: 0,
+      size: 15,
+      label: 'My first node',
+      color: '#FA4F40'
+    })
+    loadGraph(graph)
+  }, [loadGraph])
+
+  return null
+}
+
+export const DisplayGraph = () => {
+  return (
+    <SigmaContainer>
+      <LoadGraph />
+    </SigmaContainer>
   )
 }
