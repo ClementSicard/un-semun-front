@@ -9,7 +9,6 @@ import {
   Divider,
   Flex,
   SlideFade,
-  Stack,
   Text,
   VStack
 } from '@chakra-ui/react'
@@ -45,6 +44,8 @@ export const Home: React.FC = () => {
   const displaySuccess = data && !isError && !isSearching
   const displayError = isError && !isSearching
   const nbOfPages = data ? Math.ceil(data.total / pageSize) : 0
+
+  console.log('nbOfPages:', nbOfPages)
 
   return (
     <>
