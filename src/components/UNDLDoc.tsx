@@ -1,5 +1,4 @@
-import { ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
-import { ApiRecord } from '../types/ApiResponse'
+import { CalendarIcon, ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
 import {
   Card,
   CardBody,
@@ -11,8 +10,10 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
-  Spacer
+  Spacer,
+  HStack
 } from '@chakra-ui/react'
+import { ApiRecord } from '../types/ApiResponse'
 
 interface ResultCardProps {
   record: ApiRecord
@@ -32,12 +33,35 @@ export const UNDLDoc: React.FC<ResultCardProps> = ({ record }) => {
         // w='l'
         w='100%'
       >
-        <Stack maxH='150'>
+        <Stack>
           <CardBody>
-            <Tag size={'sm'} key={'sm'} colorScheme='teal' variant='subtle'>
-              <TagLeftIcon boxSize='12px' as={LinkIcon} />
-              <TagLabel>{record.symbol}</TagLabel>
-            </Tag>
+            <HStack spacing={2} pb={2}>
+              <Tag size={'sm'} key={'sm'} colorScheme='teal' variant='subtle'>
+                <TagLeftIcon boxSize='12px' as={LinkIcon} />
+                <TagLabel>{record.symbol}</TagLabel>
+              </Tag>
+              <Tag
+                size={'sm'}
+                key={'sm'}
+                colorScheme='linkedin'
+                variant='subtle'
+              >
+                <TagLeftIcon boxSize='12px' as={CalendarIcon} />
+                <TagLabel>{record.publication_date}</TagLabel>
+              </Tag>
+            </HStack>
+            <HStack spacing={2} pb={4}>
+              {record.collections.un_bodies.map((type, index) => (
+                <Tag
+                  size={'sm'}
+                  key={'sm'}
+                  colorScheme='orange'
+                  variant='subtle'
+                >
+                  {type}
+                </Tag>
+              ))}
+            </HStack>
             <Heading size='xs'>
               <Link
                 isExternal

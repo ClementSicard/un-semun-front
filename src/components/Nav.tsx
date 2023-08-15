@@ -46,7 +46,9 @@ export const Nav: React.FC<NavProps> = ({ children }) => {
           h={16}
         >
           <Box>
-            <Text fontSize={'lg'}>SemUN</Text>
+            <Text fontSize={'lg'} fontWeight={'thin'}>
+              SemUN
+            </Text>
           </Box>
           {children}
           <Flex alignItems={'center'}>

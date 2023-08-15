@@ -22,6 +22,7 @@ import Graph from 'graphology'
 
 import getNodeProgramImage from 'sigma/rendering/webgl/programs/node.image'
 import { GraphEvents } from './components/GraphEvents'
+import { CircleLoader } from 'react-spinners'
 
 export const Home: React.FC = () => {
   const [data, setData] = useState<ApiResponse | null>(null)
@@ -91,9 +92,6 @@ export const Home: React.FC = () => {
             flex='2'
             bg={useColorModeValue('white', 'gray.900')}
             p={0}
-            // borderRadius={'25'}
-            borderTopLeftRadius={'25'}
-            borderBottomLeftRadius={'25'}
             h='94vh'
           >
             {GraphPane()}
@@ -106,12 +104,20 @@ export const Home: React.FC = () => {
   function ResultsPane (): JSX.Element {
     return (
       <>
-        <VStack spacing={4}>{data && getCardsFromApiResponse(data)}</VStack>
-        {!data && (
+        {!data && !isSearching && (
           <Center h='80vh'>
             <Text>Make a query first to see results</Text>
           </Center>
         )}
+        {!data && isSearching && (
+          <Box p={4}>
+            <Center h='80vh'>
+              <CircleLoader size={100} />
+            </Center>
+          </Box>
+        )}
+
+        <VStack spacing={4}>{data && getCardsFromApiResponse(data)}</VStack>
       </>
     )
   }
@@ -119,6 +125,23 @@ export const Home: React.FC = () => {
   function GraphPane (): JSX.Element {
     return (
       <>
+        {!graphData && !isSearching && (
+          <Box p={4}>
+            <Center h='80vh'>
+              <Text>
+                The results will appear here as a network of documents, UN
+                entities, countries...
+              </Text>
+            </Center>
+          </Box>
+        )}
+        {!graphData && isSearching && (
+          <Box p={4}>
+            <Center h='80vh'>
+              <CircleLoader size={100} />
+            </Center>
+          </Box>
+        )}
         {lessNodesThanResults && displayGraphWarning()}
         {graphData && (
           <SigmaContainer
