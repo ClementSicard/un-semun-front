@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Alert,
   AlertDescription,
@@ -12,19 +12,23 @@ import {
 } from '@chakra-ui/react'
 import { SearchBar } from './components/SearchBar'
 import { ApiResponse } from './types/ApiResponse'
-import { queryApi, getCardsFromApiResponse } from './lib/api'
+import { querySearchApi, getCardsFromApiResponse, queryGraph } from './lib/api'
 import { Nav } from './components/Nav'
-import { useLoadGraph, SigmaContainer } from '@react-sigma/core'
+import { SigmaContainer } from '@react-sigma/core'
 import '@react-sigma/core/lib/react-sigma.min.css'
 import Graph from 'graphology'
+
+import getNodeProgramImage from 'sigma/rendering/webgl/programs/node.image'
+import drawLabel from './lib/CanvasUtils'
 
 export const Home: React.FC = () => {
   const [data, setData] = useState<ApiResponse | null>(null)
   const [isSearching, setIsSearching] = useState(false)
   const [isError, setIsError] = useState(false)
   const [error, setError] = useState<any>(null)
-  const [graphData, setGraphData] = useState<any>(null)
+  const [graphData, setGraphData] = useState<Graph | null>(null)
 
+  // Graph
   const pageSize = 100
 
   const handleSearch = async (query: string): Promise<void> => {
@@ -33,8 +37,12 @@ export const Home: React.FC = () => {
     try {
       setIsSearching(true)
       setIsError(false)
-      const response = await queryApi(query)
+
+      const response = await querySearchApi(query)
       setData(response)
+
+      const graphResponse = await queryGraph(query)
+      setGraphData(graphResponse)
     } catch (error) {
       setError(error)
       setIsError(true)
@@ -63,7 +71,7 @@ export const Home: React.FC = () => {
           <Box flex='1' bg='white' p={4} overflowY='auto'>
             {resultsPane()}
           </Box>
-          <Box flex='2' bg='cyan' p={4}>
+          <Box flex='2' bg='cyan' p={0}>
             {graphPane()}
           </Box>
         </Flex>
@@ -87,7 +95,23 @@ export const Home: React.FC = () => {
   function graphPane () {
     return (
       <>
-        <DisplayGraph />
+        {graphData && (
+          <SigmaContainer
+            graph={graphData}
+            settings={{
+              nodeProgramClasses: { image: getNodeProgramImage() },
+              labelRenderer: drawLabel,
+              defaultNodeType: 'image',
+              defaultEdgeType: 'line',
+              labelDensity: 0.07,
+              labelGridCellSize: 100,
+              labelRenderedSizeThreshold: 6,
+              labelFont: 'Helvetica Neue, sans-serif',
+              labelWeight: '300',
+              zIndex: true
+            }}
+          />
+        )}
       </>
     )
   }
@@ -136,30 +160,4 @@ export const Home: React.FC = () => {
       </>
     )
   }
-}
-
-export const LoadGraph = () => {
-  const loadGraph = useLoadGraph()
-
-  useEffect(() => {
-    const graph = new Graph()
-    graph.addNode('first', {
-      x: 0,
-      y: 0,
-      size: 15,
-      label: 'My first node',
-      color: '#FA4F40'
-    })
-    loadGraph(graph)
-  }, [loadGraph])
-
-  return null
-}
-
-export const DisplayGraph = () => {
-  return (
-    <SigmaContainer>
-      <LoadGraph />
-    </SigmaContainer>
-  )
 }
