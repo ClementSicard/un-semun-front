@@ -44,6 +44,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           border='1px solid #949494'
           value={query}
           size={size}
+          fontWeight={'thin'}
           onChange={e => setQuery(e.target.value)}
           onKeyPress={handleKeyPress}
           borderRadius={borderRadius} // Top left and bottom left rounded

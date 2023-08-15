@@ -1,10 +1,16 @@
 
 import { extendTheme } from "@chakra-ui/react";
 
+export const unColor = "#4b92db";
+
 export const theme = extendTheme({
+    fonts: {
+        body: 'Helvetica Neue, sans-serif',
+        heading: 'Helvetica Neue, sans-serif',
+    },
     colors: {
         doenet: {
-            mainBlue: "#1a5a99",
+            mainBlue: unColor,
             lightBlue: "#b8d2ea",
             solidLightBlue: "#8fb8de",
             mainGrey: "#e3e3e3",
@@ -23,9 +29,25 @@ export const theme = extendTheme({
         }
     },
     components: {
+        Text: {
+            baseStyle: {
+                fontWeight: "thin", // set your default font weight here
+                fontSize: "16px"
+            },
+        },
+        Heading: {
+            baseStyle: {
+                fontWeight: "semibold" // set your default font weight for headings here
+            },
+        },
+        Input: {
+            baseStyle: {
+                fontWeight: "thin",
+            }
+        },
         Button: {
             baseStyle: {
-                fontWeight: "normal",
+                fontWeight: "thin",
                 letterSpacing: ".5px",
                 _focus: {
                     outline: "2px solid #2D5994",

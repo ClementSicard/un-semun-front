@@ -96,7 +96,6 @@ export default function drawLabel(
     data: PartialButFor<NodeDisplayData, "x" | "y" | "size" | "label" | "color">,
     settings: Settings,
 ): void {
-    console.warn("drawLabel", data)
     if (!data.title) return;
 
     const size = settings.labelSize;

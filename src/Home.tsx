@@ -6,9 +6,11 @@ import {
   AlertTitle,
   Box,
   Center,
+  Divider,
   Flex,
   Text,
-  VStack
+  VStack,
+  useColorModeValue
 } from '@chakra-ui/react'
 import { SearchBar } from './components/SearchBar'
 import { ApiResponse } from './types/ApiResponse'
@@ -19,7 +21,7 @@ import '@react-sigma/core/lib/react-sigma.min.css'
 import Graph from 'graphology'
 
 import getNodeProgramImage from 'sigma/rendering/webgl/programs/node.image'
-import drawLabel from './lib/CanvasUtils'
+import { GraphEvents } from './components/GraphEvents'
 
 export const Home: React.FC = () => {
   const [data, setData] = useState<ApiResponse | null>(null)
@@ -53,64 +55,89 @@ export const Home: React.FC = () => {
 
   const displaySuccess = data && !isError && !isSearching
   const displayError = isError && !isSearching
+  const lessNodesThanResults =
+    graphData && graphData.nodes.length !== data?.total
+
   const nbOfPages = data ? Math.ceil(data.total / pageSize) : 0
 
   console.log('nbOfPages:', nbOfPages)
 
   return (
     <>
-      <Box maxH='100vh'>
+      <Box maxH='100vh' h='100%' objectFit={'fill'}>
         <Nav>
           <SearchBar onSearch={handleSearch} isSearching={isSearching} />
         </Nav>
 
         {displayAPIError()}
-        {displayAPISuccess()}
 
-        <Flex width='100%' height='100vh'>
-          <Box flex='1' bg='white' p={4} overflowY='auto'>
-            {resultsPane()}
+        <Flex
+          width='100%'
+          height='94vh'
+          bg={useColorModeValue('blue.100', 'gray.900')}
+          overflow={'clip'}
+        >
+          <Box flex='1'>
+            {displayAPISuccess()}
+            <Box p={4} overflowY='auto' maxH='90vh'>
+              {ResultsPane()}
+            </Box>
           </Box>
-          <Box flex='2' bg='cyan' p={0}>
-            {graphPane()}
+          <Divider
+            orientation='vertical'
+            bg={useColorModeValue('gray.900', 'gray.100')}
+          />
+          <Box
+            flex='2'
+            bg={useColorModeValue('white', 'gray.900')}
+            p={0}
+            // borderRadius={'25'}
+            borderTopLeftRadius={'25'}
+            borderBottomLeftRadius={'25'}
+            h='94vh'
+          >
+            {GraphPane()}
           </Box>
         </Flex>
       </Box>
     </>
   )
 
-  function resultsPane () {
+  function ResultsPane (): JSX.Element {
     return (
       <>
         <VStack spacing={4}>{data && getCardsFromApiResponse(data)}</VStack>
         {!data && (
-          <Center>
-            <Text>Make a query to see the results</Text>
+          <Center h='80vh'>
+            <Text>Make a query first to see results</Text>
           </Center>
         )}
       </>
     )
   }
 
-  function graphPane () {
+  function GraphPane (): JSX.Element {
     return (
       <>
+        {lessNodesThanResults && displayGraphWarning()}
         {graphData && (
           <SigmaContainer
             graph={graphData}
             settings={{
               nodeProgramClasses: { image: getNodeProgramImage() },
-              labelRenderer: drawLabel,
+              // labelRenderer: drawLabel,
               defaultNodeType: 'image',
               defaultEdgeType: 'line',
-              labelDensity: 0.07,
-              labelGridCellSize: 100,
-              labelRenderedSizeThreshold: 6,
+              // labelDensity: 0.1,
+              // labelGridCellSize: 100,
+              // labelRenderedSizeThreshold: 6,
               labelFont: 'Helvetica Neue, sans-serif',
               labelWeight: '300',
               zIndex: true
             }}
-          />
+          >
+            <GraphEvents />
+          </SigmaContainer>
         )}
       </>
     )
@@ -121,18 +148,42 @@ export const Home: React.FC = () => {
       <>
         {displayError && (
           <div>
-            <VStack spacing={4} m='1rem'>
-              <Alert status='error' variant='left-accent'>
-                <AlertIcon />
-                <AlertTitle>Oops... </AlertTitle>
-                <AlertDescription>
-                  <Text>
-                    There was an error fetching the API: {error.message}
-                  </Text>
-                </AlertDescription>
-              </Alert>
-              <Text align='start' w='100'></Text>
-            </VStack>
+            <Alert status='error' variant='left-accent'>
+              <AlertIcon />
+              <AlertTitle>Oops... </AlertTitle>
+              <AlertDescription>
+                <Text>
+                  There was an error fetching the API: {error.message}
+                </Text>
+              </AlertDescription>
+            </Alert>
+            <Text align='start' w='100'></Text>
+          </div>
+        )}
+      </>
+    )
+  }
+
+  function displayGraphWarning () {
+    return (
+      <>
+        {lessNodesThanResults && (
+          <div>
+            <Alert status='warning' variant='top-accent'>
+              <AlertIcon />
+              <AlertTitle>Information </AlertTitle>
+              <AlertDescription>
+                <Text>
+                  Some results were not displayed in the graph because they were
+                  not yet passed through the ML pipeline{' '}
+                  <b>
+                    ({graphData.nodes().length}/{data!.total})
+                  </b>
+                  .
+                </Text>
+              </AlertDescription>
+            </Alert>
+            <Text align='start' w='100'></Text>
           </div>
         )}
       </>

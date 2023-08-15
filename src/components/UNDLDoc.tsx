@@ -49,7 +49,7 @@ export const UNDLDoc: React.FC<ResultCardProps> = ({ record }) => {
               </Link>
             </Heading>
             <Spacer h='15' />
-            <Button variant='outline'>
+            <Button variant='outline' onClick={openDocLink}>
               <Link
                 isExternal
                 variant='outline'
@@ -57,7 +57,7 @@ export const UNDLDoc: React.FC<ResultCardProps> = ({ record }) => {
                 fontSize={'sm'}
                 onClick={openDocLink}
               >
-                View document <ExternalLinkIcon mx='2px' />
+                Read <ExternalLinkIcon mx='2px' />
               </Link>
             </Button>
           </CardBody>
@@ -67,6 +67,6 @@ export const UNDLDoc: React.FC<ResultCardProps> = ({ record }) => {
   )
 
   function openDocLink () {
-    window.open(record.downloads.English, '_blank')
+    window.open(`https://digitallibrary.un.org/record/${record.id}`, '_blank')
   }
 }

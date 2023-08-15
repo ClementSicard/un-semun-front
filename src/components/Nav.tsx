@@ -38,12 +38,12 @@ export const Nav: React.FC<NavProps> = ({ children }) => {
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} h={16}>
         <Flex
-          h={16}
           alignItems={'center'}
           justifyContent={'space-between'}
           zIndex={1}
+          h={16}
         >
           <Box>
             <Text fontSize={'lg'}>SemUN</Text>
