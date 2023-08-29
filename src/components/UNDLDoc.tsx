@@ -15,11 +15,11 @@ import {
 } from '@chakra-ui/react'
 import { ApiRecord } from '../types/ApiResponse'
 
-interface ResultCardProps {
+interface UNDLDocCard {
   record: ApiRecord
 }
 
-export const UNDLDoc: React.FC<ResultCardProps> = ({ record }) => {
+export const UNDLDoc: React.FC<UNDLDocCard> = ({ record }) => {
   return (
     <>
       <Card
@@ -30,6 +30,7 @@ export const UNDLDoc: React.FC<ResultCardProps> = ({ record }) => {
         border={1}
         borderRadius={20}
         colorScheme='gray'
+        key={record.id}
         // w='l'
         w='100%'
       >

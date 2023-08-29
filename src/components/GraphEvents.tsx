@@ -1,14 +1,30 @@
 import { useRegisterEvents, useSigma } from '@react-sigma/core'
+import Graph from 'graphology'
 import { useState, useEffect } from 'react'
 
 export const GraphEvents: React.FC = () => {
   const registerEvents = useRegisterEvents()
   const sigma = useSigma()
   const [draggedNode, setDraggedNode] = useState<string | null>(null)
+  const [hoveredNode, setHovereddNode] = useState<string | null>(null)
 
   useEffect(() => {
     // Register the events
     registerEvents({
+      enterNode: e => {
+        setHovereddNode(e.node)
+        console.log('enterNode', e.node)
+        console.log('pointer', sigma.getContainer().style.cursor)
+        // Change mouse cursor
+        sigma.getContainer().style.cursor = 'pointer'
+        sigma.getGraph().setNodeAttribute(e.node, 'highlighted', true)
+      },
+      leaveNode: e => {
+        console.log('leaveNode', e.node)
+        sigma.getGraph().setNodeAttribute(e.node, 'highlighted', false)
+        sigma.getContainer().style.cursor = ''
+        setHovereddNode(null)
+      },
       downNode: e => {
         setDraggedNode(e.node)
         sigma.getGraph().setNodeAttribute(e.node, 'highlighted', true)
@@ -42,6 +58,14 @@ export const GraphEvents: React.FC = () => {
           sigma.getGraph().removeNodeAttribute(draggedNode, 'highlighted')
         }
       },
+      doubleClick: e => {
+        if (hoveredNode) {
+          console.log('click', hoveredNode)
+          const url = getUrlBasedonNodeType(sigma.getGraph(), hoveredNode)
+          window.open(url, '_blank')
+        }
+      },
+
       touchdown: e => {
         // Disable the autoscale at the first down interaction
         if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox())
@@ -59,7 +83,20 @@ export const GraphEvents: React.FC = () => {
         }
       }
     })
-  }, [registerEvents, sigma, draggedNode])
+  }, [registerEvents, sigma, draggedNode, hoveredNode])
 
   return null
+}
+
+function getUrlBasedonNodeType (graph: Graph, node: string) {
+  const nodeType = graph.getNodeAttribute(node, 'nodeType')
+
+  switch (nodeType) {
+    case 'Document':
+      return `https://digitallibrary.un.org/record/${node}`
+    case 'Topic' || 'MetaTopic':
+      return `https://metadata.un.org/thesaurus/${node}`
+    case 'Country':
+      return `https://www.un.org/en/about-us/member-states`
+  }
 }

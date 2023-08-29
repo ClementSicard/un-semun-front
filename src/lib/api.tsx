@@ -23,7 +23,7 @@ async function queryApi (url: string): Promise<any | null> {
 
 function getCardsFromApiResponse (response: ApiResponse): JSX.Element[] {
   return response.records.map((record, _) => {
-    return <UNDLDoc record={record} />
+    return <UNDLDoc record={record} key={record.id} />
   })
 }
 
@@ -40,7 +40,7 @@ async function queryGraph (query: string): Promise<Graph> {
   const graphResponse = await queryApi(`/graph?q=${query}`)
   const graph = Graph.from(graphResponse)
 
-  randomLayout.assign(graph, { scale: 100 })
+  randomLayout.assign(graph, { scale: 10 })
   forceAtlas2.assign(graph, {
     iterations: 50,
     settings: { barnesHutOptimize: true }
@@ -63,7 +63,7 @@ function updateNode (graph: Graph, node: string): Graph {
 
   switch (nodeType) {
     case 'Document':
-      nodeSize = 5
+      nodeSize = 10
       nodeColor = unColor
       labelKey = 'title'
       break

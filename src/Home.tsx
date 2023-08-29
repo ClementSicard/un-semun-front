@@ -109,6 +109,11 @@ export const Home: React.FC = () => {
             <Text>Make a query first to see results</Text>
           </Center>
         )}
+        {data && !isSearching && data.records.length === 0 && (
+          <Center h='80vh'>
+            <Text>No results for this query. Please try again</Text>
+          </Center>
+        )}
         {!data && isSearching && (
           <Box p={4}>
             <Center h='80vh'>
@@ -117,7 +122,9 @@ export const Home: React.FC = () => {
           </Box>
         )}
 
-        <VStack spacing={4}>{data && getCardsFromApiResponse(data)}</VStack>
+        <VStack spacing={4}>
+          {data && data.records && getCardsFromApiResponse(data)}
+        </VStack>
       </>
     )
   }
@@ -150,10 +157,10 @@ export const Home: React.FC = () => {
               nodeProgramClasses: { image: getNodeProgramImage() },
               // labelRenderer: drawLabel,
               defaultNodeType: 'image',
-              defaultEdgeType: 'line',
-              // labelDensity: 0.1,
-              // labelGridCellSize: 100,
-              // labelRenderedSizeThreshold: 6,
+              defaultEdgeType: 'arrow',
+              labelDensity: 0.1,
+              labelGridCellSize: 100,
+              labelRenderedSizeThreshold: 6,
               labelFont: 'Helvetica Neue, sans-serif',
               labelWeight: '300',
               zIndex: true
@@ -224,10 +231,17 @@ export const Home: React.FC = () => {
               maxH={'40'}
             >
               <AlertIcon />
-              <Text fontSize={'sm'} size={'sm'}>
-                Search returned <b> {data.total.toLocaleString(undefined)} </b>{' '}
-                results.
-              </Text>
+              {data && data.records.length !== 0 && (
+                <Text fontSize={'sm'} size={'sm'}>
+                  Search returned{' '}
+                  <b> {data.total.toLocaleString(undefined)} </b> results.
+                </Text>
+              )}
+              {data && data.records.length === 0 && (
+                <Text fontSize={'sm'} size={'sm'}>
+                  Search returned <b>0</b> results.
+                </Text>
+              )}
             </Alert>
           </div>
         )}

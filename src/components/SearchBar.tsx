@@ -69,7 +69,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               borderLeftRadius={0}
               borderRightRadius={borderRadius} // Top right and bottom right rounded
               border='1px solid #949494'
-              onClick={handleSearchClick}
+              onClick={query.length === 0 ? () => null : handleSearchClick}
             >
               Search
             </Button>
