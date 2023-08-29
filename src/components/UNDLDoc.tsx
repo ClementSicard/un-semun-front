@@ -1,4 +1,9 @@
-import { CalendarIcon, ExternalLinkIcon, LinkIcon } from '@chakra-ui/icons'
+import {
+  CalendarIcon,
+  ExternalLinkIcon,
+  InfoIcon,
+  LinkIcon
+} from '@chakra-ui/icons'
 import {
   Card,
   CardBody,
@@ -11,15 +16,29 @@ import {
   TagLabel,
   TagLeftIcon,
   Spacer,
-  HStack
+  HStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger
 } from '@chakra-ui/react'
 import { ApiRecord } from '../types/ApiResponse'
 
 interface UNDLDocCard {
   record: ApiRecord
+  summary: string
 }
 
-export const UNDLDoc: React.FC<UNDLDocCard> = ({ record }) => {
+export const UNDLDoc: React.FC<UNDLDocCard> = ({ record, summary }) => {
+  const enableSummaryButton =
+    summary === null ||
+    summary === undefined ||
+    summary === 'None' ||
+    summary === ''
+
   return (
     <>
       <Card
@@ -50,6 +69,15 @@ export const UNDLDoc: React.FC<UNDLDocCard> = ({ record }) => {
                 <TagLeftIcon boxSize='12px' as={CalendarIcon} />
                 <TagLabel>{record.publication_date}</TagLabel>
               </Tag>
+              <Tag
+                size={'sm'}
+                key={'sm'}
+                colorScheme='linkedin'
+                variant='subtle'
+              >
+                <TagLeftIcon boxSize='12px' as={InfoIcon} />
+                <TagLabel>{record.id}</TagLabel>
+              </Tag>
             </HStack>
             <HStack spacing={2} pb={4}>
               {record.collections.un_bodies.map((type, index) => (
@@ -74,17 +102,30 @@ export const UNDLDoc: React.FC<UNDLDocCard> = ({ record }) => {
               </Link>
             </Heading>
             <Spacer h='15' />
-            <Button variant='outline' onClick={openDocLink}>
-              <Link
-                isExternal
-                variant='outline'
-                colorScheme='blue'
-                fontSize={'sm'}
-                onClick={openDocLink}
-              >
-                Read <ExternalLinkIcon mx='2px' />
-              </Link>
-            </Button>
+            <HStack>
+              <Button variant='outline' onClick={openDocLink}>
+                <Link
+                  isExternal
+                  variant='outline'
+                  colorScheme='blue'
+                  fontSize={'sm'}
+                  onClick={openDocLink}
+                >
+                  Read PDF <ExternalLinkIcon mx='2px' />
+                </Link>
+              </Button>
+              <Popover placement='right'>
+                <PopoverTrigger>
+                  <Button isDisabled={enableSummaryButton}>Summary</Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverHeader fontWeight='semibold'>Summary</PopoverHeader>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverBody>{summary}</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </HStack>
           </CardBody>
         </Stack>
       </Card>

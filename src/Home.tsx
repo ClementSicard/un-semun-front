@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { SearchBar } from './components/SearchBar'
 import { ApiResponse } from './types/ApiResponse'
-import { querySearchApi, getCardsFromApiResponse, queryGraph } from './lib/api'
+import { querySearchApi, getCardsFromApiResponse } from './lib/api'
 import { Nav } from './components/Nav'
 import { SigmaContainer } from '@react-sigma/core'
 import '@react-sigma/core/lib/react-sigma.min.css'
@@ -23,6 +23,7 @@ import Graph from 'graphology'
 import getNodeProgramImage from 'sigma/rendering/webgl/programs/node.image'
 import { GraphEvents } from './components/GraphEvents'
 import { CircleLoader } from 'react-spinners'
+import { jsonToGraphology } from './lib/graph'
 
 export const Home: React.FC = () => {
   const [data, setData] = useState<ApiResponse | null>(null)
@@ -43,9 +44,7 @@ export const Home: React.FC = () => {
 
       const response = await querySearchApi(query)
       setData(response)
-
-      const graphResponse = await queryGraph(query)
-      setGraphData(graphResponse)
+      setGraphData(jsonToGraphology(response?.graph))
     } catch (error) {
       setError(error)
       setIsError(true)
@@ -65,7 +64,7 @@ export const Home: React.FC = () => {
 
   return (
     <>
-      <Box maxH='100vh' h='100%' objectFit={'fill'}>
+      <Box maxH='100vh' h='100vh' objectFit={'fill'}>
         <Nav>
           <SearchBar onSearch={handleSearch} isSearching={isSearching} />
         </Nav>
