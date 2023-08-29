@@ -39,6 +39,17 @@ export const UNDLDoc: React.FC<UNDLDocCard> = ({ record, summary }) => {
     summary === 'None' ||
     summary === ''
 
+  const bodiesTags = record.collections.un_bodies.map((type, index) => (
+    <Tag size={'sm'} key={'sm'} colorScheme='orange' variant='subtle'>
+      {type}
+    </Tag>
+  ))
+  const subjectsTags = record.subjects.unbist.map((type, index) => (
+    <Tag size={'sm'} key={'sm'} colorScheme='green' variant='subtle'>
+      {type}
+    </Tag>
+  ))
+
   return (
     <>
       <Card
@@ -79,18 +90,6 @@ export const UNDLDoc: React.FC<UNDLDocCard> = ({ record, summary }) => {
                 <TagLabel>{record.id}</TagLabel>
               </Tag>
             </HStack>
-            <HStack spacing={2} pb={4}>
-              {record.collections.un_bodies.map((type, index) => (
-                <Tag
-                  size={'sm'}
-                  key={'sm'}
-                  colorScheme='orange'
-                  variant='subtle'
-                >
-                  {type}
-                </Tag>
-              ))}
-            </HStack>
             <Heading size='xs'>
               <Link
                 isExternal
@@ -102,11 +101,12 @@ export const UNDLDoc: React.FC<UNDLDocCard> = ({ record, summary }) => {
               </Link>
             </Heading>
             <Spacer h='15' />
+            <HStack>{bodiesTags}</HStack>
+            <Spacer h='15' />
             <HStack>
-              <Button variant='outline' onClick={openDocLink}>
+              <Button onClick={openDocLink}>
                 <Link
                   isExternal
-                  variant='outline'
                   colorScheme='blue'
                   fontSize={'sm'}
                   onClick={openDocLink}
@@ -116,13 +116,32 @@ export const UNDLDoc: React.FC<UNDLDocCard> = ({ record, summary }) => {
               </Button>
               <Popover placement='right'>
                 <PopoverTrigger>
-                  <Button isDisabled={enableSummaryButton}>Summary</Button>
+                  <Button variant='outline' isDisabled={enableSummaryButton}>
+                    Summary
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent>
                   <PopoverHeader fontWeight='semibold'>Summary</PopoverHeader>
                   <PopoverArrow />
                   <PopoverCloseButton />
                   <PopoverBody>{summary}</PopoverBody>
+                </PopoverContent>
+              </Popover>
+
+              <Popover placement='bottom'>
+                <PopoverTrigger>
+                  <Button
+                    variant='outline'
+                    isDisabled={bodiesTags.length === 0}
+                  >
+                    Subjects
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverHeader fontWeight='semibold'>Subjects</PopoverHeader>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverBody>{subjectsTags}</PopoverBody>
                 </PopoverContent>
               </Popover>
             </HStack>

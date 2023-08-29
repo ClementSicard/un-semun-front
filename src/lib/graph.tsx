@@ -29,7 +29,7 @@ function updateNode (graph: Graph, node: string): Graph {
 
   switch (nodeType) {
     case 'Document':
-      nodeSize = 10
+      nodeSize = 5
       nodeColor = unColor
       labelKey = 'title'
       break
@@ -56,7 +56,7 @@ function updateNode (graph: Graph, node: string): Graph {
       labelKey = 'label'
   }
 
-  graph.setNodeAttribute(node, 'size', nodeSize * 5)
+  graph.setNodeAttribute(node, 'size', nodeSize)
   graph.setNodeAttribute(node, 'color', nodeColor)
 
   const title = graph.getNodeAttribute(node, labelKey)

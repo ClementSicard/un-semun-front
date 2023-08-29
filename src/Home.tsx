@@ -206,7 +206,8 @@ export const Home: React.FC = () => {
                   Some results were not displayed in the graph because they were
                   not yet passed through the ML pipeline{' '}
                   <b>
-                    ({graphData.nodes().length}/{data!.total})
+                    ({graphData.nodes().length.toLocaleString(undefined)}/
+                    {data!.total.toLocaleString(undefined)})
                   </b>
                   .
                 </Text>
